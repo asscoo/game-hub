@@ -11,16 +11,17 @@ import { clear } from 'console';
 })
 export class SnakeGameComponent {
   snake: Array<Array<number>> = [
-    [0, 0],
-    [1, 0],
     [2, 0],
+    [1, 0],
+    [0, 0],
   ];
   ctx: CanvasRenderingContext2D | null = null;
   snakePartSize: number = 15;
   currentDirection: string = '';
   berry: Array<number> = [];
   gameInterval: any;
-
+  lastTickForKeypress: number = 0;
+  currentTicks: number = 0;
 
   gameInformation: SnakeGameInformation = new SnakeGameInformation();
   @Output() snakeGameInformation = new EventEmitter<SnakeGameInformation>();
@@ -70,13 +71,15 @@ export class SnakeGameComponent {
   }
 
   userKeyPress(event: KeyboardEvent) {
-    if (event.key === 'ArrowRight') {
+    if (this.lastTickForKeypress === this.currentTicks) return;
+    this.lastTickForKeypress = this.currentTicks;
+    if ((event.key === 'ArrowRight' || event.key === 'd') && this.currentDirection !== this.LEFT_DIRECTION) {
       this.currentDirection = this.RIGHT_DIRECTION;
-    } else if (event.key === 'ArrowLeft') {
+    } else if ((event.key === 'ArrowLeft' || event.key === 'a') && this.currentDirection !== this.RIGHT_DIRECTION) {
       this.currentDirection = this.LEFT_DIRECTION;
-    } else if (event.key === 'ArrowUp') {
+    } else if ((event.key === 'ArrowUp' || event.key === 'w') && this.currentDirection !== this.DOWN_DIRECTION) {
       this.currentDirection = this.UP_DIRECTION;
-    } else if (event.key === 'ArrowDown') {
+    } else if ((event.key === 'ArrowDown' || event.key === 's') && this.currentDirection !== this.UP_DIRECTION) {
       this.currentDirection = this.DOWN_DIRECTION;
     }
   }
@@ -87,10 +90,21 @@ export class SnakeGameComponent {
   }
 
   checkIfGameOver(){
-    return this.snake[0][0] < 0 || 
-           this.snake[0][0] > this.MaxRightPosition - 1 || 
-           this.snake[0][1] < 0 || 
-           this.snake[0][1] > this.MaxDownPosition - 1;
+    return this.isSnakeCollidingWithWall() || this.isSnakeCollidingWithItself();
+  }
+
+  isSnakeCollidingWithItself(){
+    for(let i = 1; i < this.snake.length; i++){
+      if(this.snake[0][0] === this.snake[i][0] && this.snake[0][1] === this.snake[i][1]) return true;
+    }
+    return false;
+  }
+
+  isSnakeCollidingWithWall(){
+    return (this.snake[0][0] < 0 || 
+      this.snake[0][0] > this.MaxRightPosition - 1 || 
+      this.snake[0][1] < 0 || 
+      this.snake[0][1] > this.MaxDownPosition - 1);
   }
 
   createBerry(){
@@ -98,6 +112,16 @@ export class SnakeGameComponent {
     let spawnBerry = Math.floor(Math.random() * 10) == 4;
     if(!spawnBerry) return;
     this.berry = [Math.floor(Math.random() * this.MaxRightPosition), Math.floor(Math.random() * this.MaxDownPosition)];
+    while(this.isBerryOnSnake()){
+      this.berry = [Math.floor(Math.random() * this.MaxRightPosition), Math.floor(Math.random() * this.MaxDownPosition)];
+    }
+  }
+
+  isBerryOnSnake(){
+    for(let i = 0; i < this.snake.length; i++){
+      if(this.snake[i][0] === this.berry[0] && this.snake[i][1] === this.berry[1]) return true;
+    }
+    return false;
   }
 
   doesSnakeEatBerry(){
@@ -151,10 +175,13 @@ export class SnakeGameComponent {
     this.drawSnake();
     if(this.checkIfGameOver()){
       alert('Game Over');
+      this.gameInformation.isGameover = true;
+      this.updateGameInformation();
       clearInterval(this.gameInterval);
       return;
     }
     this.snakeTickMove();
     this.updateGameInformation();
+    this.currentTicks++;
   }
 }
