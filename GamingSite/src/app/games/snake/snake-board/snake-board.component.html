@@ -1,0 +1,5 @@
+<div style="color: white;">
+    <p>SCOREBOARD</p>
+    <p>Current position: X:{{gameInformation.currentXPosition}} Y:{{gameInformation.currentYPosition}} || Score: {{gameInformation.score}} || Snake size: {{gameInformation.snakePartSize}}</p>
+</div>
+<app-snake-game (snakeGameInformation)="onGameInfromationChanged($event)"></app-snake-game>

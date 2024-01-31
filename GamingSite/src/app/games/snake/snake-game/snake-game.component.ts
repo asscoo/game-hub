@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { SnakeGameInformation } from './../snake-game-information';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { clear } from 'console';
 
 @Component({
@@ -20,6 +21,9 @@ export class SnakeGameComponent {
   berry: Array<number> = [];
   gameInterval: any;
 
+
+  gameInformation: SnakeGameInformation = new SnakeGameInformation();
+  @Output() snakeGameInformation = new EventEmitter<SnakeGameInformation>();
 
   MaxRightPosition: number = 0;
   MaxDownPosition: number = 0;
@@ -134,6 +138,14 @@ export class SnakeGameComponent {
     this.createBerry();
   }
 
+  updateGameInformation(){
+    this.gameInformation.currentXPosition = this.snake[0][0];
+    this.gameInformation.currentYPosition = this.snake[0][1];
+    this.gameInformation.snakePartSize = this.snakePartSize;
+    this.gameInformation.score = this.snake.length - 3;
+    this.snakeGameInformation.emit(this.gameInformation);
+  }
+
   gameTick() {
     this.resetCanvas();
     this.drawSnake();
@@ -143,5 +155,6 @@ export class SnakeGameComponent {
       return;
     }
     this.snakeTickMove();
+    this.updateGameInformation();
   }
 }
