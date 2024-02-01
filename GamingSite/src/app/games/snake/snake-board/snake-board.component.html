@@ -3,4 +3,8 @@
     <p>Current position: X:{{gameInformation.currentXPosition}} Y:{{gameInformation.currentYPosition}} || Score: {{gameInformation.score}} || Snake size: {{gameInformation.snakePartSize}}</p>
     <p>Game time: {{getElapsedTime(gameInformation.gameStartDate)}}</p>
 </div>
-<app-snake-game (snakeGameInformation)="onGameInfromationChanged($event)"></app-snake-game>
+
+<div class="snake-container">
+    <app-snake-game (snakeGameInformation)="onGameInfromationChanged($event)"></app-snake-game>
+    <div class="snake-menu">TEST</div>
+</div>

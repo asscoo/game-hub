@@ -1,0 +1,13 @@
+.snake-container{
+    background-color: rgb(73, 67, 67);
+    width:40%;
+    margin: 0 auto;
+}
+
+.snake-menu{
+    background-color: black;
+    color: white;
+    position: absolute;
+    width:39.5%;
+    top: 200px;
+} 

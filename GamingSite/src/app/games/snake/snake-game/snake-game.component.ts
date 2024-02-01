@@ -28,7 +28,7 @@ export class SnakeGameComponent {
 
   MaxRightPosition: number = 0;
   MaxDownPosition: number = 0;
-
+  IntervalMS: number = 100;
 
   RIGHT_DIRECTION: string = 'right';
   LEFT_DIRECTION: string = 'left';
@@ -43,7 +43,7 @@ export class SnakeGameComponent {
     this.currentDirection = this.RIGHT_DIRECTION;
     this.ctx = this.getCanvasContext();
     this.drawSnake();
-    this.gameInterval = setInterval(() => {this.gameTick()}, 100);
+    this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS);
   }
 
   drawSnake() {
@@ -131,6 +131,20 @@ export class SnakeGameComponent {
   onSnakeEatBerry(){
     this.snake.push([this.snake[this.snake.length - 1][0], this.snake[this.snake.length - 1][1]]);
     this.berry = [];
+    if(this.gameInformation.score < 40)
+        this.IntervalMS -= 1;
+    else if(this.gameInformation.score < 100 && this.gameInformation.score >= 40){
+      if(this.gameInformation.score % 2 === 0)
+        this.IntervalMS -= 1;
+    }else if(this.gameInformation.score < 200 && this.gameInformation.score >= 100){
+      if(this.gameInformation.score % 4 === 0)
+        this.IntervalMS -= 1;
+    }else{
+      if(this.gameInformation.score % 8 === 0)
+        this.IntervalMS -= 1;
+    }
+    clearInterval(this.gameInterval);
+    this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS);
   }
 
   getCanvasContext(): CanvasRenderingContext2D | null {
@@ -173,13 +187,13 @@ export class SnakeGameComponent {
   gameTick() {
     this.resetCanvas();
     this.drawSnake();
-    if(this.checkIfGameOver()){
-      alert('Game Over');
-      this.gameInformation.isGameover = true;
-      this.updateGameInformation();
-      clearInterval(this.gameInterval);
-      return;
-    }
+    // if(this.checkIfGameOver()){
+    //   alert('Game Over');
+    //   this.gameInformation.isGameover = true;
+    //   this.updateGameInformation();
+    //   clearInterval(this.gameInterval);
+    //   return;
+    // }
     this.snakeTickMove();
     this.updateGameInformation();
     this.currentTicks++;
