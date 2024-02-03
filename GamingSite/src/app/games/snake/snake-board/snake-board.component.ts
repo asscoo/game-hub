@@ -1,11 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { SnakeGameComponent } from '../snake-game/snake-game.component';
 import { SnakeGameInformation } from '../snake-game-information';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-snake-board',
-  standalone: true,
-  imports: [SnakeGameComponent],
   templateUrl: './snake-board.component.html',
   styleUrl: './snake-board.component.css'
 })

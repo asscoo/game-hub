@@ -6,5 +6,7 @@
 
 <div class="snake-container">
     <app-snake-game (snakeGameInformation)="onGameInfromationChanged($event)"></app-snake-game>
-    <div class="snake-menu">TEST</div>
+    <div *ngIf="gameInformation.isGameover" class="snake-menu">
+        <a class="btn btn-success">Zagraj ponownie!</a>
+    </div>
 </div>

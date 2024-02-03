@@ -1,11 +1,10 @@
 import { SnakeGameInformation } from './../snake-game-information';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { clear } from 'console';
-
+import { DOCUMENT } from '@angular/common'; 
+import { Inject } from '@angular/core';
 @Component({
   selector: 'app-snake-game',
-  standalone: true,
-  imports: [],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.css',
 })
@@ -34,16 +33,22 @@ export class SnakeGameComponent {
   LEFT_DIRECTION: string = 'left';
   UP_DIRECTION: string = 'up';
   DOWN_DIRECTION: string = 'down';
-  constructor() {}
+  constructor(@Inject(DOCUMENT) private document: Document) {
+   
+  }
 
   ngOnInit(): void {
+    window.addEventListener('keydown', this.userKeyPress.bind(this));
     this.MaxDownPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).height / this.snakePartSize;
     this.MaxRightPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).width / this.snakePartSize;
-    window.addEventListener('keydown', this.userKeyPress.bind(this));
-    this.currentDirection = this.RIGHT_DIRECTION;
     this.ctx = this.getCanvasContext();
+    this.currentDirection = this.RIGHT_DIRECTION;
     this.drawSnake();
-    this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS);
+    this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS);  
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   drawSnake() {
@@ -187,13 +192,12 @@ export class SnakeGameComponent {
   gameTick() {
     this.resetCanvas();
     this.drawSnake();
-    // if(this.checkIfGameOver()){
-    //   alert('Game Over');
-    //   this.gameInformation.isGameover = true;
-    //   this.updateGameInformation();
-    //   clearInterval(this.gameInterval);
-    //   return;
-    // }
+    if(this.checkIfGameOver()){
+      this.gameInformation.isGameover = true;
+      this.updateGameInformation();
+      clearInterval(this.gameInterval);
+      return;
+    }
     this.snakeTickMove();
     this.updateGameInformation();
     this.currentTicks++;
