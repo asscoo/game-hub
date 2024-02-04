@@ -1,5 +1,5 @@
 import { SnakeGameInformation } from './../snake-game-information';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { clear } from 'console';
 import { DOCUMENT } from '@angular/common'; 
 import { Inject } from '@angular/core';
@@ -9,13 +9,14 @@ import { Inject } from '@angular/core';
   styleUrl: './snake-game.component.css',
 })
 export class SnakeGameComponent {
+  @Input() gameRestart: boolean = false;
+  @Output() snakeGameInformation = new EventEmitter<SnakeGameInformation>();
   snake: Array<Array<number>> = [
     [2, 0],
     [1, 0],
     [0, 0],
   ];
   ctx: CanvasRenderingContext2D | null = null;
-  snakePartSize: number = 15;
   currentDirection: string = '';
   berry: Array<number> = [];
   gameInterval: any;
@@ -23,7 +24,6 @@ export class SnakeGameComponent {
   currentTicks: number = 0;
 
   gameInformation: SnakeGameInformation = new SnakeGameInformation();
-  @Output() snakeGameInformation = new EventEmitter<SnakeGameInformation>();
 
   MaxRightPosition: number = 0;
   MaxDownPosition: number = 0;
@@ -39,16 +39,32 @@ export class SnakeGameComponent {
 
   ngOnInit(): void {
     window.addEventListener('keydown', this.userKeyPress.bind(this));
-    this.MaxDownPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).height / this.snakePartSize;
-    this.MaxRightPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).width / this.snakePartSize;
+    this.MaxDownPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).height / this.gameInformation.snakePartSize;
+    this.MaxRightPosition = (document.getElementById('snakeCanvas') as HTMLCanvasElement).width / this.gameInformation.snakePartSize;
     this.ctx = this.getCanvasContext();
     this.currentDirection = this.RIGHT_DIRECTION;
     this.drawSnake();
-    this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS);  
   }
 
   ngAfterViewInit(): void {
 
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if (changes['gameRestart']) {
+      this.snake = [
+        [2, 0],
+        [1, 0],
+        [0, 0],
+      ];
+      this.currentTicks = 0;
+      this.IntervalMS = 100;
+      this.lastTickForKeypress = 0;
+      this.currentDirection = this.RIGHT_DIRECTION;
+      this.drawSnake();
+      this.gameInformation = new SnakeGameInformation();
+      this.gameInterval = setInterval(() => {this.gameTick()}, this.IntervalMS); 
+    }
   }
 
   drawSnake() {
@@ -56,21 +72,23 @@ export class SnakeGameComponent {
     for (let i = 0; i < this.snake.length; i++) {
       this.ctx.fillStyle = 'black';
       this.drawSquare(
-        this.snake[i][0] * this.snakePartSize,
-        this.snake[i][1] * this.snakePartSize,
-        this.snakePartSize
+        this.snake[i][0] * this.gameInformation.snakePartSize,
+        this.snake[i][1] * this.gameInformation.snakePartSize,
+        this.gameInformation.snakePartSize
       );
       this.ctx.fillStyle = 'green';
       this.drawSquare(
-        this.snake[i][0] * this.snakePartSize + 2,
-        this.snake[i][1] * this.snakePartSize + 2,
-        this.snakePartSize - 4
+        this.snake[i][0] * this.gameInformation.snakePartSize + 2,
+        this.snake[i][1] * this.gameInformation.snakePartSize + 2,
+        this.gameInformation.snakePartSize - 4
       );
     }
 
     if(this.berry.length !== 0){
       this.ctx.fillStyle = 'red';
-      this.drawSquare(this.berry[0] * this.snakePartSize, this.berry[1] * this.snakePartSize, this.snakePartSize);
+      this.drawSquare(this.berry[0] * this.gameInformation.snakePartSize,
+                      this.berry[1] * this.gameInformation.snakePartSize,
+                      this.gameInformation.snakePartSize);
     }
 
   }
@@ -184,7 +202,7 @@ export class SnakeGameComponent {
   updateGameInformation(){
     this.gameInformation.currentXPosition = this.snake[0][0];
     this.gameInformation.currentYPosition = this.snake[0][1];
-    this.gameInformation.snakePartSize = this.snakePartSize;
+    this.gameInformation.snakePartSize = this.gameInformation.snakePartSize;
     this.gameInformation.score = this.snake.length - 3;
     this.snakeGameInformation.emit(this.gameInformation);
   }
@@ -193,9 +211,11 @@ export class SnakeGameComponent {
     this.resetCanvas();
     this.drawSnake();
     if(this.checkIfGameOver()){
+      
       this.gameInformation.isGameover = true;
       this.updateGameInformation();
       clearInterval(this.gameInterval);
+      alert('Gameover');
       return;
     }
     this.snakeTickMove();

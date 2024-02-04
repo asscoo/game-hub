@@ -1,12 +1,30 @@
-<div style="color: white;">
-    <p>SCOREBOARD</p>
-    <p>Current position: X:{{gameInformation.currentXPosition}} Y:{{gameInformation.currentYPosition}} || Score: {{gameInformation.score}} || Snake size: {{gameInformation.snakePartSize}}</p>
-    <p>Game time: {{getElapsedTime(gameInformation.gameStartDate)}}</p>
+<div style="color: white">
+  <p>SCOREBOARD</p>
+  <p>
+    Current position: X:{{ gameInformation.currentXPosition }} Y:{{
+      gameInformation.currentYPosition
+    }}
+    || Score: {{ gameInformation.score }} || Snake size:
+    {{ gameInformation.snakePartSize }}
+  </p>
+  <p>Game time: {{ getElapsedTime(gameInformation.gameStartDate) }}</p>
 </div>
 
 <div class="snake-container">
-    <app-snake-game (snakeGameInformation)="onGameInfromationChanged($event)"></app-snake-game>
-    <div *ngIf="gameInformation.isGameover" class="snake-menu">
-        <a class="btn btn-success">Zagraj ponownie!</a>
+  <app-snake-game
+    (snakeGameInformation)="onGameInfromationChanged($event)"
+    [gameRestart]="gameRestart"
+  ></app-snake-game>
+  <div *ngIf="gameInformation.isGameover" class="snake-menu">
+    <div class="text-center">
+      <div class="w-50">
+        <a class="btn btn-sm btn-success" style="font-size: 0.7rem" (click)="restartGame()"
+          >Zagraj ponownie!</a
+        >
+      </div>
+      <div class="w-50">
+        <a class="btn btn-sm btn-danger" style="font-size: 0.7rem">Wyjdź</a>
+      </div>
     </div>
+  </div>
 </div>
