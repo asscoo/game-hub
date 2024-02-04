@@ -6,5 +6,6 @@ export class SnakeGameInformation {
     snakePartSize: number = 15;
     score: number = 0;
     gameStartDate: Date = new Date();
+    gamePauseDate: Date = new Date();
     isGameover: boolean = false;
 }

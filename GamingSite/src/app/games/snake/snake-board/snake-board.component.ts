@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { SnakeGameComponent } from '../snake-game/snake-game.component';
 import { SnakeGameInformation } from '../snake-game-information';
+import { CommonModule } from '@angular/common';
+import { SnakeGameComponent } from '../snake-game/snake-game.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Utils } from '../../../Utils';
 
 @Component({
   selector: 'app-snake-board',
@@ -24,12 +25,9 @@ export class SnakeBoardComponent {
   }
 
   getElapsedTime(gameStartDate: Date): string {
-    const now = new Date();
-    const elapsedMS = now.getTime() - gameStartDate.getTime();
-    const elapsedSeconds = Math.floor(elapsedMS / 1000);
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    let a = Utils.getElapsedTime(gameStartDate);
+    return a;
+
   }
 
   restartGame(){

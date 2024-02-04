@@ -8,7 +8,7 @@ import { SnakeGameComponent } from './games/snake/snake-game/snake-game.componen
 @NgModule({
   declarations: [
     SnakeBoardComponent,
-    SnakeGameComponent
+    SnakeGameComponent,
   ],
   imports: [
     CommonModule,
