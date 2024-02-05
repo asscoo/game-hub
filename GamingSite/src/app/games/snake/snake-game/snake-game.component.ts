@@ -81,9 +81,9 @@ export class SnakeGameComponent {
     for (let i = 0; i < this.snake.length; i++) {
       this.ctx.fillStyle = 'black';
       this.drawSquare(
-        this.snake[i][0] * this.gameInformation.snakePartSize,
-        this.snake[i][1] * this.gameInformation.snakePartSize,
-        this.gameInformation.snakePartSize
+        this.snake[i][0] * this.gameInformation.snakePartSize + 1,
+        this.snake[i][1] * this.gameInformation.snakePartSize + 1,
+        this.gameInformation.snakePartSize -2
       );
       this.ctx.fillStyle = 'green';
       this.drawSquare(
@@ -94,11 +94,17 @@ export class SnakeGameComponent {
     }
 
     if (this.berry.length !== 0) {
+      this.ctx.fillStyle = 'black';
+      this.drawSquare(
+        this.berry[0] * this.gameInformation.snakePartSize + 1,
+        this.berry[1] * this.gameInformation.snakePartSize + 1,
+        this.gameInformation.snakePartSize -2
+      );
       this.ctx.fillStyle = 'red';
       this.drawSquare(
-        this.berry[0] * this.gameInformation.snakePartSize,
-        this.berry[1] * this.gameInformation.snakePartSize,
-        this.gameInformation.snakePartSize
+        this.berry[0] * this.gameInformation.snakePartSize + 2,
+        this.berry[1] * this.gameInformation.snakePartSize + 2,
+        this.gameInformation.snakePartSize- 4
       );
     }
   }
