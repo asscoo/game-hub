@@ -1,6 +1,6 @@
 1. Snake
     1.1. Features
-        - Kolorowanie snake gradientem
+        - Kolorowanie snake gradientem -- ZROBIONE
         - Nożyczki (zmniejszaja rozmiar snake)
         - Znikanie berry's po jakimś czasie
         - Dodanie informacji o pauzie

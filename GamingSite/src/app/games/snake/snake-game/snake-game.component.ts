@@ -30,6 +30,20 @@ export class SnakeGameComponent {
   lastTickForKeypress: number = 0;
   currentTicks: number = 0;
 
+  gradientColors: Array<string> = [
+    '#1A9D15',
+    '#199C13',
+    '#1B9E16',
+    '#1B9E16',
+    '#129508',
+    '#24A723',
+    '#3ABD45',
+    '#4CCF62',
+    '#57DA72',
+    '#63E684',
+    '#6EF195'
+  ]
+
   gameInformation: SnakeGameInformation = new SnakeGameInformation();
 
   MaxRightPosition: number = 0;
@@ -78,14 +92,17 @@ export class SnakeGameComponent {
 
   drawSnake() {
     if (!this.ctx) return;
+    console.log('PROCENTY');
     for (let i = 0; i < this.snake.length; i++) {
+      let currentPercentage = (i / this.snake.length) * 100.0;
+      console.log(currentPercentage);
       this.ctx.fillStyle = 'black';
       this.drawSquare(
         this.snake[i][0] * this.gameInformation.snakePartSize + 1,
         this.snake[i][1] * this.gameInformation.snakePartSize + 1,
         this.gameInformation.snakePartSize -2
       );
-      this.ctx.fillStyle = 'green';
+      this.ctx.fillStyle = this.gradientColors[Math.floor(currentPercentage / 10)];;
       this.drawSquare(
         this.snake[i][0] * this.gameInformation.snakePartSize + 2,
         this.snake[i][1] * this.gameInformation.snakePartSize + 2,
