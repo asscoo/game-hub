@@ -1,9 +1,12 @@
 1. Snake
     1.1. Features
         - Kolorowanie snake gradientem -- ZROBIONE
-        - Nożyczki (zmniejszaja rozmiar snake)
+        - Nożyczki (zmniejszaja rozmiar snake) -- ZROBIONE
+        - Odseperowanie logiki nożyczek -- ZROBIONE
+        - Odseperowanie logiki berry's
         - Znikanie berry's po jakimś czasie
         - Dodanie informacji o pauzie
         - Wystlizowanie dashboarda
+
     1.2 Bugs
         - Naprawa ekranu "Zagraj ponownie" - wyświetla się na starcie

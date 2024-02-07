@@ -1,5 +1,6 @@
 import { SnakeGameInformation } from './../snake-game-information';
 import Scissors from './snake-scissors';
+import Berry from './snake-berry';
 import {
   Component,
   EventEmitter,
@@ -201,61 +202,8 @@ export class SnakeGameComponent {
     );
   }
 
-  createBerry() {
-    if (this.berry.length !== 0) return;
-    let spawnBerry = Math.floor(Math.random() * 10) == 4;
-    if (!spawnBerry) return;
-    this.berry = [
-      Math.floor(Math.random() * this.MaxRightPosition),
-      Math.floor(Math.random() * this.MaxDownPosition),
-    ];
-    while (this.isBerryOnSnake()) {
-      this.berry = [
-        Math.floor(Math.random() * this.MaxRightPosition),
-        Math.floor(Math.random() * this.MaxDownPosition),
-      ];
-    }
-  }
-
-  
-
-  isBerryOnSnake() {
-    for (let i = 0; i < this.snake.length; i++) {
-      if (
-        this.snake[i][0] === this.berry[0] &&
-        this.snake[i][1] === this.berry[1]
-      )
-        return true;
-    }
-    return false;
-  }
-
-  doesSnakeEatBerry() {
-    return (
-      this.snake[0][0] === this.berry[0] && this.snake[0][1] === this.berry[1]
-    );
-  }
-
   onSnakeEatBerry() {
-    this.snake.push([
-      this.snake[this.snake.length - 1][0],
-      this.snake[this.snake.length - 1][1],
-    ]);
-    this.berry = [];
-    if (this.gameInformation.score < 40) this.IntervalMS -= 1;
-    else if (
-      this.gameInformation.score < 100 &&
-      this.gameInformation.score >= 40
-    ) {
-      if (this.gameInformation.score % 2 === 0) this.IntervalMS -= 1;
-    } else if (
-      this.gameInformation.score < 200 &&
-      this.gameInformation.score >= 100
-    ) {
-      if (this.gameInformation.score % 4 === 0) this.IntervalMS -= 1;
-    } else {
-      if (this.gameInformation.score % 8 === 0) this.IntervalMS -= 1;
-    }
+    this.IntervalMS = Berry.onSnakeEatBerry(this.snake, this.berry, this.gameInformation, this.IntervalMS);
     clearInterval(this.gameInterval);
     this.gameInterval = setInterval(() => {
       this.gameTick();
@@ -283,10 +231,10 @@ export class SnakeGameComponent {
     } else if (this.currentDirection === this.DOWN_DIRECTION) {
       this.snake.unshift([this.snake[0][0], this.snake[0][1] + 1]);
     }
-    if (this.doesSnakeEatBerry()) this.onSnakeEatBerry();
+    if (Berry.doesSnakeEatBerry(this.snake, this.berry)) this.onSnakeEatBerry();
     if (Scissors.doesSnakeEatScissors(this.snake, this.scissors)) Scissors.onSnakeEatScissors(this.snake, this.scissors);
     this.snake.pop();
-    this.createBerry();
+    Berry.createBerry(this.berry, this.snake, this.MaxRightPosition, this.MaxDownPosition);
     Scissors.createScissors(this.snake, this.scissors, this.MaxRightPosition, this.MaxDownPosition);
   }
 
@@ -305,7 +253,6 @@ export class SnakeGameComponent {
       this.gameInformation.isGameover = true;
       this.updateGameInformation();
       clearInterval(this.gameInterval);
-      alert('Gameover');
       return;
     }
     this.snakeTickMove();
