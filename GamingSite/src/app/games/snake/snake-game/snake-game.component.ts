@@ -1,4 +1,5 @@
 import { SnakeGameInformation } from './../snake-game-information';
+import Scissors from './snake-scissors';
 import {
   Component,
   EventEmitter,
@@ -26,6 +27,7 @@ export class SnakeGameComponent {
   ctx: CanvasRenderingContext2D | null = null;
   currentDirection: string = '';
   berry: Array<number> = [];
+  scissors: Array<number> = [];
   gameInterval: any;
   lastTickForKeypress: number = 0;
   currentTicks: number = 0;
@@ -54,7 +56,9 @@ export class SnakeGameComponent {
   LEFT_DIRECTION: string = 'left';
   UP_DIRECTION: string = 'up';
   DOWN_DIRECTION: string = 'down';
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.drawSquare = this.drawSquare.bind(this);
+  }
 
   ngOnInit(): void {
     window.addEventListener('keydown', this.userKeyPress.bind(this));
@@ -92,17 +96,15 @@ export class SnakeGameComponent {
 
   drawSnake() {
     if (!this.ctx) return;
-    console.log('PROCENTY');
     for (let i = 0; i < this.snake.length; i++) {
       let currentPercentage = (i / this.snake.length) * 100.0;
-      console.log(currentPercentage);
       this.ctx.fillStyle = 'black';
       this.drawSquare(
         this.snake[i][0] * this.gameInformation.snakePartSize + 1,
         this.snake[i][1] * this.gameInformation.snakePartSize + 1,
         this.gameInformation.snakePartSize -2
       );
-      this.ctx.fillStyle = this.gradientColors[Math.floor(currentPercentage / 10)];;
+      this.ctx.fillStyle = this.gradientColors[Math.floor(currentPercentage / 10)];
       this.drawSquare(
         this.snake[i][0] * this.gameInformation.snakePartSize + 2,
         this.snake[i][1] * this.gameInformation.snakePartSize + 2,
@@ -124,6 +126,8 @@ export class SnakeGameComponent {
         this.gameInformation.snakePartSize- 4
       );
     }
+
+    Scissors.drawScissors(this.ctx, this.scissors, this.gameInformation, this.drawSquare);
   }
 
   userKeyPress(event: KeyboardEvent) {
@@ -213,6 +217,8 @@ export class SnakeGameComponent {
     }
   }
 
+  
+
   isBerryOnSnake() {
     for (let i = 0; i < this.snake.length; i++) {
       if (
@@ -278,9 +284,10 @@ export class SnakeGameComponent {
       this.snake.unshift([this.snake[0][0], this.snake[0][1] + 1]);
     }
     if (this.doesSnakeEatBerry()) this.onSnakeEatBerry();
-
+    if (Scissors.doesSnakeEatScissors(this.snake, this.scissors)) Scissors.onSnakeEatScissors(this.snake, this.scissors);
     this.snake.pop();
     this.createBerry();
+    Scissors.createScissors(this.snake, this.scissors, this.MaxRightPosition, this.MaxDownPosition);
   }
 
   updateGameInformation() {
@@ -305,4 +312,23 @@ export class SnakeGameComponent {
     this.updateGameInformation();
     this.currentTicks++;
   }
+
+  drawScissors() {
+    if(!this.ctx) return;
+    if (this.scissors.length !== 0) {
+      this.ctx.fillStyle = 'black';
+      this.drawSquare(
+        this.scissors[0] * this.gameInformation.snakePartSize + 1,
+        this.scissors[1] * this.gameInformation.snakePartSize + 1,
+        this.gameInformation.snakePartSize -2
+      );
+      this.ctx.fillStyle = 'blue';
+      this.drawSquare(
+        this.scissors[0] * this.gameInformation.snakePartSize + 2,
+        this.scissors[1] * this.gameInformation.snakePartSize + 2,
+        this.gameInformation.snakePartSize - 4
+      );
+    }
+  }
+
 }
