@@ -15,14 +15,14 @@
     (snakeGameInformation)="onGameInfromationChanged($event)"
     [gameRestart]="gameRestart"
   ></app-snake-game>
-  <div *ngIf="gameInformation.isGameover" class="snake-menu">
+  <div *ngIf="gameover === true" class="snake-menu">
     <div class="text-center">
-      <div class="w-50">
+      <div class="w-100">
         <a class="btn btn-sm btn-success" style="font-size: 0.7rem" (click)="restartGame()"
           >Zagraj ponownie!</a
         >
       </div>
-      <div class="w-50">
+      <div class="w-100">
         <a class="btn btn-sm btn-danger" style="font-size: 0.7rem">Wyjdź</a>
       </div>
     </div>

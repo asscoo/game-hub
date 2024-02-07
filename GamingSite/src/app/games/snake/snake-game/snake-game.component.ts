@@ -72,12 +72,17 @@ export class SnakeGameComponent {
     this.ctx = this.getCanvasContext();
     this.currentDirection = this.RIGHT_DIRECTION;
     this.drawSnake();
+    this.gameInterval = setInterval(() => {
+      this.gameTick();
+    }, this.IntervalMS);
   }
 
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['gameRestart']) {
+    let changesObject = changes as any;
+    if (changesObject.gameRestart.currentValue === true) {
+      alert('Game Restarted');
       this.snake = [
         [2, 0],
         [1, 0],
@@ -89,6 +94,7 @@ export class SnakeGameComponent {
       this.currentDirection = this.RIGHT_DIRECTION;
       this.drawSnake();
       this.gameInformation = new SnakeGameInformation();
+      
       this.gameInterval = setInterval(() => {
         this.gameTick();
       }, this.IntervalMS);
@@ -256,26 +262,8 @@ export class SnakeGameComponent {
       return;
     }
     this.snakeTickMove();
+    this.gameInformation.isGameover = false;
     this.updateGameInformation();
     this.currentTicks++;
   }
-
-  drawScissors() {
-    if(!this.ctx) return;
-    if (this.scissors.length !== 0) {
-      this.ctx.fillStyle = 'black';
-      this.drawSquare(
-        this.scissors[0] * this.gameInformation.snakePartSize + 1,
-        this.scissors[1] * this.gameInformation.snakePartSize + 1,
-        this.gameInformation.snakePartSize -2
-      );
-      this.ctx.fillStyle = 'blue';
-      this.drawSquare(
-        this.scissors[0] * this.gameInformation.snakePartSize + 2,
-        this.scissors[1] * this.gameInformation.snakePartSize + 2,
-        this.gameInformation.snakePartSize - 4
-      );
-    }
-  }
-
 }

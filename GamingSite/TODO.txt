@@ -9,4 +9,5 @@
         - Wystlizowanie dashboarda
 
     1.2 Bugs
-        - Naprawa ekranu "Zagraj ponownie" - wyświetla się na starcie
+        - Naprawa ekranu "Zagraj ponownie" - wyświetla się na starcie -- ZROBIONE
+        - Teraz gra działa wolniej trzeba naprawić

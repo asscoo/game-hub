@@ -11,23 +11,27 @@ import { Utils } from '../../../Utils';
   styleUrl: './snake-board.component.css'
 })
 export class SnakeBoardComponent {
-
   gameInformation: SnakeGameInformation = new SnakeGameInformation();
+  gameover: boolean = false;
   gameRestart: boolean = false;
   constructor() { }
 
   ngOnInit(): void {
-    this.gameInformation.isGameover = false;
+
+  }
+
+  ngAfterViewInit() {
+
   }
 
   onGameInfromationChanged(gameInformation: SnakeGameInformation) {
     this.gameInformation = gameInformation;
+    this.gameover = gameInformation.isGameover;
   }
 
   getElapsedTime(gameStartDate: Date): string {
     let a = Utils.getElapsedTime(gameStartDate);
     return a;
-
   }
 
   restartGame(){
