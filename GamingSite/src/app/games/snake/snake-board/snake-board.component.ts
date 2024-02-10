@@ -25,6 +25,7 @@ export class SnakeBoardComponent {
   }
 
   onGameInfromationChanged(gameInformation: SnakeGameInformation) {
+    this.gameRestart = false;
     this.gameInformation = gameInformation;
     this.gameover = gameInformation.isGameover;
   }
@@ -35,6 +36,6 @@ export class SnakeBoardComponent {
   }
 
   restartGame(){
-    this.gameRestart = !this.gameRestart;
+    this.gameRestart = true;
   }
 }

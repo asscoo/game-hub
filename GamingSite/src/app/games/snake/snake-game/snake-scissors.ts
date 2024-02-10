@@ -1,7 +1,10 @@
 import { SnakeGameInformation } from "../snake-game-information";
 
 function createScissors(snake: Array<Array<number>>, scissors: Array<number>, MaxRightPosition: number, MaxDownPosition: number): void {
-    if (scissors.length !== 0) return;
+    if (scissors.length !== 0){
+      checkDespawnScissors(scissors);
+      return;
+    }
     let spawnScissors = Math.floor(Math.random() * 50) == 4;
     if (!spawnScissors) return;
     scissors[0] = Math.floor(Math.random() * MaxRightPosition);
@@ -9,6 +12,13 @@ function createScissors(snake: Array<Array<number>>, scissors: Array<number>, Ma
     while (isScissorsOnSnake(snake, scissors)) {
       scissors[0] = Math.floor(Math.random() * MaxRightPosition);
       scissors[1] = Math.floor(Math.random() * MaxDownPosition);
+    }
+  }
+
+  function checkDespawnScissors(scissors: Array<number>) {
+    if (scissors.length === 0) return;
+    if (Math.floor(Math.random() * 95) == 4) {
+      scissors.length = 0;
     }
   }
   

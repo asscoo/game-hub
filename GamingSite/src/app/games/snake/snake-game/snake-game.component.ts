@@ -82,7 +82,6 @@ export class SnakeGameComponent {
   ngOnChanges(changes: SimpleChanges) {
     let changesObject = changes as any;
     if (changesObject.gameRestart.currentValue === true) {
-      alert('Game Restarted');
       this.snake = [
         [2, 0],
         [1, 0],
@@ -92,6 +91,8 @@ export class SnakeGameComponent {
       this.IntervalMS = 100;
       this.lastTickForKeypress = 0;
       this.currentDirection = this.RIGHT_DIRECTION;
+      this.berry.length = 0;
+      this.scissors.length = 0;
       this.drawSnake();
       this.gameInformation = new SnakeGameInformation();
       
@@ -175,6 +176,7 @@ export class SnakeGameComponent {
         this.gameInterval = setInterval(() => {
           this.gameTick();
         }, this.IntervalMS);
+        return;
       }
     }
   }

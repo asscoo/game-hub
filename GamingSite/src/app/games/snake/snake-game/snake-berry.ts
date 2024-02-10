@@ -25,7 +25,10 @@ function onSnakeEatBerry(snake: Array<Array<number>>, berry: Array<number>, game
   }
 
   function createBerry(berry: Array<number>, snake: Array<Array<number>>, MaxRightPosition: number, MaxDownPosition: number) {
-    if (berry.length !== 0) return;
+    if (berry.length !== 0){
+      checkDespawnBerry(berry);
+      return;
+    } 
     let spawnBerry = Math.floor(Math.random() * 10) == 4;
     if (!spawnBerry) return;
     berry[0] = Math.floor(Math.random() * MaxRightPosition);
@@ -33,6 +36,13 @@ function onSnakeEatBerry(snake: Array<Array<number>>, berry: Array<number>, game
     while (isBerryOnSnake(snake, berry)) {
         berry[0] = Math.floor(Math.random() * MaxRightPosition);
         berry[1] = Math.floor(Math.random() * MaxDownPosition);
+    }
+  }
+
+  function checkDespawnBerry(berry: Array<number>) {
+    if (berry.length === 0) return;
+    if (Math.floor(Math.random() * 95) == 4) {
+      berry.length = 0;
     }
   }
 
