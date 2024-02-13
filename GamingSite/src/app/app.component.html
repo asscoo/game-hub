@@ -1,3 +1,7 @@
 <div style="width: 100%; text-align: center;">
-  <app-snake-board></app-snake-board>
+  <div id="gameSelection">
+    <h4 (click)="selectGame('Snake')">snake</h4>
+    <h4 (click)="selectGame('Chess')">chess</h4>
+  </div>
+  <app-snake-board *ngIf="currentGame === 'Snake'"></app-snake-board>
 </div>
