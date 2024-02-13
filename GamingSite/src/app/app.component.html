@@ -4,4 +4,5 @@
     <h4 (click)="selectGame('Chess')">chess</h4>
   </div>
   <app-snake-board *ngIf="currentGame === 'Snake'"></app-snake-board>
+  <app-chess-board *ngIf="currentGame === 'Chess'"></app-chess-board>
 </div>

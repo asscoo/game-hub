@@ -11,7 +11,7 @@ import { AppModule } from './app.module';
 })
 export class AppComponent {
   title = 'GamingSite';
-  currentGame: string = "";
+  currentGame: string = "Chess";
 
 
   selectGame(game: string) {
